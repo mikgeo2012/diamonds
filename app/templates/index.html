@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block content %}
+    <script>
+      $(document).ready(function() {
+        var selected_row = -1
+
+    var t = $('#data').DataTable({
+        "order": [[ 3, "desc" ], [ 4, "asc" ]],
+        "columnDefs": [ {
+            "targets": 0
+        } ],
+        searching: false,
+        paging: true,
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+
+     t.on( 'order.dt search.dt', function () {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+            cell.innerHTML = i+1;
+        } );
+    } ).draw();
+
+     t.on( 'click', 'tr', function () {
+        if ( $(this).hasClass('selected') ) {
+            $(this).removeClass('selected');
+            selected_row = -1;
+        }
+        else {
+            t.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            selected_row = $(this).data('id');
+        }
+    } );
+
+     $('#delete_row').click( function () {
+        data = {"row_id": selected_row};
+        $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/index',
+                dataType : 'json',
+                data : JSON.stringify(data),
+                success : function(result) {
+                  t.row('.selected').remove().draw( false );
+                },error : function(result){
+                   console.log(result);
+                }
+            });
+
+
+      } );
+
+     $('#refresh').click( function () {
+        data = {'refresh': true};
+        $("#refresh_load").show();
+        $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/index',
+                dataType : 'json',
+                data : JSON.stringify(data),
+                success : function(result) {
+                  $("#refresh_load").hide();
+                  window.location.replace("index");
+
+                },error : function(result){
+                  $("#refresh_load").hide();
+                   console.log(result);
+
+                }
+            });
+     });
+
+
+
+      } );
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+          jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+            window.open($(this).data("href"));
+            return false;
+        });
+    });
+      </script>
+
+      <style>
+        td.clickable-row {
+    cursor: pointer;
+                        }
+        img.img-thumbnail {
+          cursor: pointer;
+        }
+      </style>
+
+<div id='refresh_load' style="position:absolute; top:30px; width: 90px; left: 40%; margin-left: -45px; display: none; z-index: 3;"><img src="/static/img/loader.gif" id="gif" /></div>
+
+  <div style="position:absolute; top:13%; right: 5%; z-index: 2;">
+      <img src="/static/img/icons/trash.svg" alt="delete diamond" class="img-thumbnail rounded float-right" id="delete_row" width="30" height="30" onClick = "deleteRows();" />
+
+    </div>
+  <div style="position:absolute; top:13%; right: 8%; z-index: 2;">
+      <img src="/static/img/icons/ref.svg" alt="refresh table" class="img-thumbnail rounded float-right" id="refresh" width="30" height="30" onClick = "refreshTable();" />
+    </div>
+
+
+
+    <table id="data" class="display" cellspacing="0" width="100%">
+      <thead>
+            <tr>
+              <th>#</th>
+              <th>Price</th>
+              <th>Carat</th>
+              <th>Diameter - Carat</th>
+              <th>Cut Score</th>
+              <th>HCA Score</th>
+              <th>Diameter</th>
+              <th>Table</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for diamond in diamonds %}
+
+              <tr data-id={{ diamond.id }}>
+                <td scope="row" class='clickable-row' data-href="{{ diamond.url }}"></td>
+                <td>${{ diamond.price }}</td>
+                <td>{{  diamond.carat  }}</td>
+                <th>{{  diamond.dia_carat  }}</th>
+                <td>{{  diamond.cut_score  }}</td>
+                <td>{{  diamond.hca_score  }}</td>
+                <td>{{  diamond.diameter  }}</td>
+                <td>{{  diamond.table  }}</td>
+              </tr>
+
+              {% endfor %}
+          </tbody>
+        </table>
+
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/r-2.2.0/sl-1.2.3/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.16/b-1.4.2/r-2.2.0/sl-1.2.3/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+
+{% endblock %}

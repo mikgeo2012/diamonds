@@ -1,0 +1,138 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+
+<div id='loader' style="position:absolute; top:150px; width: 90px; left: 35%; margin-left: -45px; display: none;"><img src="/static/img/loader.gif" id="gif" /></div>
+
+  <div class="panel-group" id="accordion">
+  <div class="panel panel-default" style="margin: 10px 10px">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse1" class="rollover">
+        Submit URL</a>
+      </h4>
+    </div>
+    <div id="collapse1" class="panel-collapse collapse">
+      <div class="panel-body">
+        <table border="0" cellspacing="0" cellpadding="0" width="1000">
+        <tr>
+        <td width="70%">
+          <form action="{{ request.path }}" method="post" name="submit_url" class="form-search" style="width: 50%">
+        <div class="form-group">
+
+        {% for i in range(3) %}
+        <div class="input-group">
+         <input type = "text" name = "url{{ i }}" placeholder = "" class="form-control input-lg" placeholder="Search"/>
+         </div>
+         {% endfor %}
+
+      </div>
+      <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" value="Submit URL"><span class="glyphicon glyphicon-search"></span> Submit</button>
+
+          </div>
+      </form>
+      </td>
+      <td width="10%">
+      <span>
+          Testing text
+
+      </span>
+      </td>
+      </tr>
+      </table>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" style="margin: 10px 10px">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse2" class="rollover">
+        Upload File</a>
+      </h4>
+    </div>
+    <div id="collapse2" class="panel-collapse collapse">
+      <div class="panel-body">
+        <form action="{{ request.path }}" method="post" name="submit_url" class="form-upload" enctype = "multipart/form-data">
+    <div class="form-group">
+
+
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <span class="btn btn-default btn-file"><input type="file" name = "file" /></span>
+        </div><br />
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" value="Submit file"><span class="glyphicon glyphicon-search"></span> Submit</button>
+
+          </div>
+
+    </div>
+
+  </form>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default" style="margin: 10px 10px">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse3" class="rollover">
+        Paste XML</a>
+      </h4>
+    </div>
+    <div id="collapse3" class="panel-collapse collapse">
+      <div class="panel-body">
+      <form action="{{ request.path }}" method="post" name="submit_url" class="form-search">
+        <div class="form-group">
+
+        <textarea class="form-control" rows="10" cols="2" id="data" style="overflow:auto; margin: 0px 598px 0px 0px; width: 491px; height: 202px;"></textarea>
+
+      </div>
+      <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" value="Submit XML"><span class="glyphicon glyphicon-search"></span> Submit</button>
+
+          </div>
+      </form></div>
+    </div>
+  </div>
+</div>
+
+
+ <script type="text/javascript">
+  $(document).ready(function (e) {
+    $('[data-toggle="popover"]').popover();
+    $('[data-action="popover"]').popover();
+
+
+
+    $("form").submit(function (e) {
+        e.preventDefault();
+        var form_data = $(this).serialize();
+        var form_url = $(this).attr("action");
+        var form_method = $(this).attr("method").toUpperCase();
+        $("#loader").show();
+        $.ajax({
+            url: form_url,
+            type: form_method,
+            data: form_data,
+            cache: false,
+            success: function (returnhtml) {
+                $("#loader").hide();
+                window.location.replace("index");
+            }
+        });
+    });
+
+
+});
+
+  $(document).ready(function(){
+    $('[data-toggle="popover"]').popover();
+    $('[data-action="popover"]').popover();
+
+});
+
+
+ </script>
+
+{% endblock %}

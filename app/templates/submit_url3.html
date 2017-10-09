@@ -1,0 +1,37 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Submit URL</h1>
+  <form action="{{ request.path }}" method="post" name="submit_url" class="form-search">
+    <div class="form-group">
+
+        {% for i in range(3) %}
+        <div class="input-group">
+         <input type = "text" name = "url{{ i }}" placeholder = "" class="form-control input-lg" placeholder="Search"/>
+         </div>
+         {% endfor %}
+
+      </div>
+      <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" value="Submit URL"><span class="glyphicon glyphicon-search"></span> Submit</button>
+
+          </div>
+      </form>
+
+    <form action="{{ request.path }}" method="post" name="submit_url" class="form-upload" enctype = "multipart/form-data">
+    <div class="form-group">
+      <h1>Upload txt file</h1>
+
+        <div class="fileinput fileinput-new" data-provides="fileinput">
+            <span class="btn btn-default btn-file"><input type="file" name = "file" /></span>
+        </div>
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" value="Submit file"><span class="glyphicon glyphicon-search"></span> Submit</button>
+
+          </div>
+
+    </div>
+
+  </form>
+{% endblock %}

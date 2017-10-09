@@ -1,0 +1,8 @@
+/Users/mikhailgeorge/.virtualenvs/facecourse-py2/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:778: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
+  'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and '
+ * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+ * Restarting with stat
+/Users/mikhailgeorge/.virtualenvs/facecourse-py2/lib/python2.7/site-packages/flask_sqlalchemy/__init__.py:778: FSADeprecationWarning: SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and will be disabled by default in the future.  Set it to True or False to suppress this warning.
+  'SQLALCHEMY_TRACK_MODIFICATIONS adds significant overhead and '
+ * Debugger is active!
+ * Debugger PIN: 540-258-283

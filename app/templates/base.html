@@ -1,0 +1,112 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }} - Diamond Aggregator</title>
+    {% else %}
+    <title>Welcome to The Diamond Aggregator</title>
+    {% endif %}
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <link href="/static/css/bootstrap-responsive.min.css" rel="stylesheet"> -->
+
+    <script src="http://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script type=text/javascript>
+      $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li {
+    float: left;
+    border-right:1px solid #bbb;
+}
+
+li:last-child {
+    border-right: none;
+}
+
+li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover:not(.active) {
+    background-color: #111;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+</style>
+
+  </head>
+  <body>
+ <script>
+      $(document).ready(function() {
+        $('a.navLink[href="' + location.pathname + '"]').addClass('active');
+      });
+
+      </script>
+
+
+  <nav>
+   <!--  <div class="container-fluid"> -->
+    <ul>
+      <li><a class="navLink" href="/index">Home</a></li>
+      <li><a class="navLink" href="/submit_url">Submit</a></li>
+      <li><a class="navLink" href="#">Contact</a></li>
+      <!-- <li style="float:right"><a href="#">About</a></li> -->
+      <li style="float:right"><a class="navLink" href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li style="float:right"><a class="navLink" href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+    <!-- </div> -->
+  </nav>
+
+    <hr>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            <div class="alert alert-success" style="position:absolute; z-index: 4; top:13%; right: 20%;">
+              <strong>Success!</strong> {{ message }}
+            </div>
+          {% elif category == 'error' %}
+            <div class="alert alert-danger" style="position:absolute; z-index: 4; top:13%; right: 20%;">
+              <strong>Error!</strong> {{ message }}
+            </div>
+          {% else %}
+            <div class="alert alert-warning" style="position:absolute; z-index: 4; top:13%; right: 20%;">
+              <strong>Warning!</strong> {{ message }}
+            </div>
+
+          {% endif %}
+
+        {% endfor %}
+
+      {% endif %}
+    {% endwith %}
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
+
+
+  </body>
+</html>
