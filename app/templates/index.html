@@ -71,6 +71,27 @@
             });
      });
 
+     $('#delete_table').click( function () {
+        data = {'delete': true};
+        $("#refresh_load").show();
+        $.ajax({
+                type: 'POST',
+                contentType: 'application/json',
+                url: '/index',
+                dataType : 'json',
+                data : JSON.stringify(data),
+                success : function(result) {
+                  $("#refresh_load").hide();
+                  window.location.replace("index");
+
+                },error : function(result){
+                  $("#refresh_load").hide();
+                   console.log(result);
+
+                }
+            });
+     });
+
 
 
       } );
@@ -103,7 +124,7 @@
 
     </div>
   <div style="position:absolute; top:13%; right: 8%; z-index: 2;">
-      <img src="/static/img/icons/ref.svg" alt="refresh table" class="img-thumbnail rounded float-right" id="refresh" width="30" height="30" onClick = "refreshTable();" />
+      <img src="/static/img/icons/ref.svg" alt="delete table" class="img-thumbnail rounded float-right" id="delete_table" width="30" height="30" onClick = "deleteTable();" />
     </div>
 
 

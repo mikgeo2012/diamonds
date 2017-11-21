@@ -95,3 +95,10 @@ def deleteRow(id):
     except Exception as e:
         print e
         raise
+
+def deleteTable():
+    try:
+        db.session.query(Diamond).delete()
+        db.session.commit()
+    except:
+        db.session.rollback()

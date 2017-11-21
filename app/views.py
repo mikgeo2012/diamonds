@@ -11,20 +11,22 @@ def index():
     if request.method == 'POST':
         jsond = request.get_json()
         if 'row_id' not in jsond:
-            print "Refreshing Table...."
+            # print "Refreshing Table...."
 
-            diamonds = Diamond.query.all()
-            d_url = {d.id: d.url for d in diamonds}
-            result = ut.refreshTable(d_url)
+            # diamonds = Diamond.query.all()
+            # d_url = {d.id: d.url for d in diamonds}
+            # result = ut.refreshTable(d_url)
 
-            for k, v in result.iteritems():
-                if not v:
-                    try:
-                        ut.deleteRow(k)
-                    except:
-                        print "Error when deleting diamond"
-            print "finished with refresh"
-            return redirect(url_for('index'))
+            # for k, v in result.iteritems():
+            #     if not v:
+            #         try:
+            #             ut.deleteRow(k)
+            #         except:
+            #             print "Error when deleting diamond"
+            print "Deleting Table...."
+            ut.deleteTable()
+            print "finished with delete"
+            redirect(url_for('index'))
         else:
             row = jsond['row_id']
             diamond = Diamond.query.get(row)
