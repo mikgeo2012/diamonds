@@ -5,6 +5,7 @@
         var selected_row = -1
 
     var t = $('#data').DataTable({
+        stateSave: true,
         dom: 'Bfrtip',
         "order": [[ 9, "desc" ]],
         "columnDefs": [ {
