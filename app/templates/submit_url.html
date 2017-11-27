@@ -3,14 +3,50 @@
 
 {% block content %}
 
+<script type="text/javascript">
 
-<div id='loader' style="position:absolute; top:150px; width: 90px; left: 35%; margin-left: -45px; display: none;"><img src="/static/img/loader.gif" id="gif" /></div>
+  jQuery(document).ready(function () {
+    // jQuery('[data-toggle="popover"]').popover();
+    // jQuery('[data-action="popover"]').popover();
+    jQuery("body").prepend("<div id='loader' style='position:fixed; top:150px; width: 100%; height: 100%; left: 35%; margin-left: -45px; display: none; z-index: 99;'><img src='/static/img/loader.gif' style='position: absolute; z-index: 100;' id='gif' /></div>")
+  });
+
+
+
+    jQuery("form").submit(function (e) {
+
+        e.preventDefault();
+
+        jQuery("#loader").show();
+
+        // jQuery("#accordion").hide();
+        var form_data = jQuery(this).serialize();
+        var form_url = jQuery(this).attr("action");
+        var form_method = jQuery(this).attr("method").toUpperCase();
+
+        jQuery.ajax({
+            url: form_url,
+            type: form_method,
+            data: form_data,
+            cache: false,
+            success: function (returnhtml) {
+                jQuery("#loader").hide();
+                window.location.replace("index");
+            }
+        });
+    });
+
+
+
+ </script>
+
+<!-- <div id='loader' style="position:fixed; top:150px; width: 100%; height: 100%; left: 35%; margin-left: -45px; display: block; z-index: 99;"><img src="/static/img/loader.gif" style="position: absolute; z-index: 100;" id="gif" /></div> -->
 
   <div class="panel-group" id="accordion">
   <div class="panel panel-default" style="margin: 10px 10px">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse1" class="rollover">
+        <a data-trigger="hover" title="Submit URL" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse1" class="rollover">
         Submit URL</a>
       </h4>
     </div>
@@ -37,8 +73,7 @@
       </td>
       <td width="10%">
       <span>
-          Testing text
-
+          Submit up to 3 James Allen diamond URL's to add them to your table
       </span>
       </td>
       </tr>
@@ -49,12 +84,17 @@
   <div class="panel panel-default" style="margin: 10px 10px">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse2" class="rollover">
+        <a data-trigger="hover" title="Upload File" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse2" class="rollover">
         Upload File</a>
       </h4>
     </div>
     <div id="collapse2" class="panel-collapse collapse">
       <div class="panel-body">
+
+        <table border="0" cellspacing="0" cellpadding="0" width="1000">
+        <tr>
+        <td width="70%">
+
         <form action="{{ request.path }}" method="post" name="submit_url" class="form-upload" enctype = "multipart/form-data">
     <div class="form-group">
 
@@ -62,77 +102,93 @@
         <div class="fileinput fileinput-new" data-provides="fileinput">
             <span class="btn btn-default btn-file"><input type="file" name = "file" /></span>
         </div><br />
+
+      </div>
+
         <div class="input-group-btn">
           <button class="btn btn-default" type="submit" value="Submit file"><span class="glyphicon glyphicon-search"></span> Submit</button>
 
           </div>
 
-    </div>
+    </form>
+    </td>
+    <td width="10%">
+      <span>
+          Submit a file with a list of James Allen diamond URL's to add them to your table
+      </span>
+      </td>
+      </tr>
+      </table>
 
-  </form>
+
       </div>
     </div>
   </div>
   <div class="panel panel-default" style="margin: 10px 10px">
     <div class="panel-heading">
       <h4 class="panel-title">
-        <a data-trigger="hover" title="Header" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse3" class="rollover">
+        <a data-trigger="hover" title="Paste XML" data-content="Some content" data-toggle="collapse" data-action="popover" data-parent="#accordion" href="#collapse3" class="rollover">
         Paste XML</a>
       </h4>
     </div>
     <div id="collapse3" class="panel-collapse collapse">
       <div class="panel-body">
+
+      <table border="0" cellspacing="0" cellpadding="0" width="1000">
+        <tr>
+        <td width="70%">
+
       <form action="{{ request.path }}" method="post" name="submit_url" class="form-search">
         <div class="form-group">
 
-        <textarea class="form-control" rows="10" cols="2" id="data" style="overflow:auto; margin: 0px 598px 0px 0px; width: 491px; height: 202px;"></textarea>
+        <textarea class="form-control" rows="10" cols="2" id="data" style="overflow:auto; margin: 0px 380px 0px 0px; width: 491px; height: 202px;"></textarea>
 
       </div>
       <div class="input-group-btn">
           <button class="btn btn-default" type="submit" value="Submit XML"><span class="glyphicon glyphicon-search"></span> Submit</button>
 
           </div>
-      </form></div>
+      </form>
+    </td>
+    <td width="10%">
+      <span>
+          Submit a XML list of James Allen diamond URL's to add them to your table
+      </span>
+      </td>
+      </tr>
+      </table>
+    </div>
     </div>
   </div>
 </div>
 
-
- <script type="text/javascript">
-  $(document).ready(function (e) {
-    $('[data-toggle="popover"]').popover();
-    $('[data-action="popover"]').popover();
-
+<script type="text/javascript">
 
 
     $("form").submit(function (e) {
+
         e.preventDefault();
+        $("#loader").show();
+        // $("#accordion").hide();
         var form_data = $(this).serialize();
         var form_url = $(this).attr("action");
         var form_method = $(this).attr("method").toUpperCase();
-        $("#loader").show();
+
         $.ajax({
             url: form_url,
             type: form_method,
             data: form_data,
             cache: false,
             success: function (returnhtml) {
-                $("#loader").hide();
+
                 window.location.replace("index");
             }
         });
     });
 
 
-});
-
-  $(document).ready(function(){
-    $('[data-toggle="popover"]').popover();
-    $('[data-action="popover"]').popover();
-
-});
-
 
  </script>
+
 
 {% endblock %}
