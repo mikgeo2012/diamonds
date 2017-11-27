@@ -38,7 +38,7 @@ def parseForImage(url):
             urllib.urlretrieve(imgUrl, os.path.abspath(
                 imgPath) + "/" + os.path.basename(imgName) + ".{0}".format(fileExt))
         except IOError:
-            print("File doesn't exist")
+            print("ERROR: File doesn't exist")
             raise
         except Exception as e:
             print(e)
@@ -57,9 +57,9 @@ def parseForImage(url):
         raise
 
 def parseForInfo(uuid, certNum, url):
+    print("Analyzing and creating Diamond....")
 
     try:
-        print("Analyzing and creating Diamond....")
         req = requests.get(url)
         req.raise_for_status()
 
@@ -75,6 +75,7 @@ def parseForInfo(uuid, certNum, url):
                     attributes.update(td)
                 else:
                     attributes[v] = soup.find("tr", help=k).find("span", id = "ItemValue").string
+                    # print v + " : " + attributes[v]
 
                     if v == 'culet' and attributes[v] == 'None':
                         attributes[v] = str(0)
@@ -84,8 +85,12 @@ def parseForInfo(uuid, certNum, url):
             attributes['gia_num'] = certNum
             attributes['url'] = str(url)
 
-            attributes['cut_score'] = parseForCutScore(certNum)
-            attributes['hca_score'] = utils.HCAScore(attributes['depth'], attributes['table'], attributes['crown'], attributes['pavilion'], attributes['culet'])
+            try:
+                attributes['cut_score'] = parseForCutScore(certNum)
+                attributes['hca_score'] = utils.HCAScore(attributes['depth'], attributes['table'], attributes['crown'], attributes['pavilion'], attributes['culet'])
+            except Exception:
+                print "Error in hca or cut score"
+                raise
 
             xy = attributes['dim'].split('*')[0:2]
             attributes['diameter'] = str((Decimal(xy[0]).quantize(Decimal('0.01')) + Decimal(xy[1]).quantize(Decimal('0.01'))) / Decimal('2.00'))
@@ -96,11 +101,16 @@ def parseForInfo(uuid, certNum, url):
             carat_ratio = (float(attributes['carat']) - 1.0)/0.25
             attributes['dia_carat'] = dia_ratio - carat_ratio
 
+            # print "ATTRIBUTES"
+            # for k,v in attributes.iteritems():
+            #     print k + " : " + v
+
         except Exception:
-            print "Diamond wasn't created"
+            print "ERROR: Diamond wasn't created"
             raise
 
-        if float(attributes['cut_score']) >= 87 and float(attributes['hca_score']) <= 2:
+        if float(attributes['cut_score']) >= 95 and float(attributes['hca_score']) <= 2:
+            # print "INFO: Gathered attributes of diamond"
             return attributes
         else:
             print "{0}   {1}   {2}".format(attributes['cut_score'], attributes['hca_score'], attributes['url'])
@@ -126,7 +136,7 @@ def parseForCutScore(gia_num):
         return score
 
     except (requests.exceptions.RequestException, AttributeError) as e:
-        print "GIA number might be translated incorrectly"
+        print "ERROR: GIA number might be entered incorrectly"
         print(e)
         raise
 

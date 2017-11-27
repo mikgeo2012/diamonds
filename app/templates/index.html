@@ -135,11 +135,14 @@
               <th>#</th>
               <th>Price</th>
               <th>Carat</th>
-              <th>Diameter - Carat</th>
+              <th>Color</th>
+              <th>Clarity</th>
               <th>Cut Score</th>
               <th>HCA Score</th>
               <th>Diameter</th>
-              <th>Table</th>
+              <th>Crown</th>
+              <th>Table / Depth</th>
+
             </tr>
         </thead>
         <tbody>
@@ -149,11 +152,13 @@
                 <td scope="row" class='clickable-row' data-href="{{ diamond.url }}"></td>
                 <td>${{ diamond.price }}</td>
                 <td>{{  diamond.carat  }}</td>
-                <th>{{  diamond.dia_carat  }}</th>
+                <th>{{  diamond.color  }}</th>
+                <th>{{  diamond.clarity  }}</th>
                 <td>{{  diamond.cut_score  }}</td>
                 <td>{{  diamond.hca_score  }}</td>
                 <td>{{  diamond.diameter  }}</td>
-                <td>{{  diamond.table  }}</td>
+                <td>{{  diamond.crown  }}</td>
+                <td>{{  diamond.table / diamond.depth  }}</td>
               </tr>
 
               {% endfor %}

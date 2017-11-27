@@ -50,33 +50,54 @@ def submit():
         commit = False
 
         if 'file' in request.files:
-            print "file"
+            print "FILE"
             f = request.files['file']
             index = 0
+            num_eval = 0
             for line in f:
-                print "Index: " + str(index)
                 if line.strip() is not '':
+                    index += 1
+                    print "Index: " + str(index)
                     di_data = ut.consumeURL(line.strip())
                     if di_data:
-                        diamond = Diamond(**di_data)
-                        db.session.add(diamond)
-                        db.session.commit()
+                        try:
+                            diamond = Diamond(**di_data)
+                            db.session.add(diamond)
+                            db.session.commit()
+                        except Exception:
+                            print"ERROR: Problem adding diamond to DB"
+
                         commit = True
-                        index += 1
+                        num_eval += 1
 
                     entry = True
+            print "SUMMARY => {0} url's read | {1} diamonds added to table | {2} failed url's".format(index, num_eval, index - num_eval)
 
         else:
-            print "url"
+            print "URL"
+            index = 0
+            num_eval = 0
             for i in range(len(request.form)):
               if request.form['url{0}'.format(i)]:
-                  attributes.append(ut.consumeURL(request.form['url{0}'.format(i)]))
-                  if attributes[i] is not None:
-                    diamond = Diamond(**attributes[i])
-                    db.session.add(diamond)
-                    db.session.commit()
-                    commit = True
-                  entry = True
+                    index += 1
+                    print "Index: " + str(index)
+                    attributes.append(ut.consumeURL(request.form['url{0}'.format(i)]))
+
+                    if attributes[i] is not None:
+                        try:
+                            diamond = Diamond(**attributes[i])
+                            db.session.add(diamond)
+                            db.session.commit()
+                        except Exception:
+                            print"ERROR: Problem adding diamond to DB"
+
+                        commit = True
+                        entry = True
+                        num_eval += 1
+                    else:
+                        print "ERROR: Problem getting diamond attributes from url"
+
+            print "SUMMARY => {0} url's read | {1} diamonds added to table | {2} failed url's".format(index, num_eval, index - num_eval)
 
 
         if not entry:

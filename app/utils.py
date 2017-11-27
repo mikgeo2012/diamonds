@@ -20,13 +20,20 @@ sel_driver = SeleniumDriver()
 def HCAScore(depth, table, crown, pavilion, cutlet):
     data = {'depth_textbox': depth, 'table_textbox': table,
             'crown_listbox': 0, 'crown_textbox': crown, 'pavilion_listbox': 0, 'pavilion_textbox': pavilion, 'cutlet_textbox': cutlet}
+    print data['depth_textbox'], data['crown_textbox']
+    # for k, v in data.iteritems():
+    #     print k + " : " + v
+
+    print depth, table, crown, pavilion, cutlet
 
     try:
         print "Getting HCA score....."
+        hca_score = sel_driver.findHCAScore(data)
+        print hca_score
+        return hca_score
 
-        return sel_driver.findHCAScore(data)
     except Exception:
-        print "Couldn't find HCA Score"
+        print "ERROR: Couldn't find HCA Score"
         raise
 
 
@@ -45,7 +52,7 @@ def printToConsole(d):
 
 def consumeURL(url):
     diamonds = Diamond.query.filter_by(url=url).all()
-    print str(len(diamonds)) + " if > 0 then duplicates exist"
+    #print str(len(diamonds)) + " if > 0 then duplicates exist"
     if len(diamonds) == 0:
         try:
             print("Downloading certificate....")
@@ -54,23 +61,36 @@ def consumeURL(url):
             print("Getting GIA number....")
             certNum = imgPro.analyze(imgName)
 
+            if not all([certNum.isdigit(), len(certNum) == 10]):
+                print "ERROR: GIA Cert Num couldn't be read. Enter value to continue or type any letter to skip to the next url"
+                print url
+                certNum = raw_input("GIA Cert Num => ")
+
+                if not all([certNum.isdigit(), len(certNum) == 10]):
+                    print "Moving to next url..."
+                    pass
+
+
+
         except requests.exceptions.RequestException as reqEx:
-            print("Couldn't download certificate. Try another url")
+            print("ERROR: Couldn't download certificate. Try another url")
             print(reqEx)
             pass
         except IOError as ioerr:
-            print("Couldn't find or read the file")
+            print("ERROR: Couldn't find or read the file")
             print(ioerr)
         except Exception as e:
             print(e)
         else:
             if certNum:
                 try:
+                    print "INFO: Sending cert num and url to web scraper"
                     return webScr.parseForInfo(imgName.split(".")[0].strip(), certNum, url)
                 except Exception:
-                    print "Couldn't read {0}".format(url)
+                    print "ERROR: Couldn't read {0}".format(url)
                     pass
     else:
+        print "ERROR: Duplicate diamond already exists in table for url: " + url
         pass
 
 def refreshTable(urls):
